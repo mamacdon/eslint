@@ -7,6 +7,7 @@ Rules in ESLint are divided into several categories to help you better understan
 The following rules point out areas where you might have made mistakes.
 
 * [no-console](no-console.md) - disallow use of `console`
+* [no-dangle](no-dangle.md) - disallow trailing commas in object literals
 * [no-debugger](No-debugger.md) - disallow use of `debugger`
 * [no-empty](No-empty.md) - disallow empty statements
 * [no-unreachable](No-unreachable.md) - disallow unreachable statements after a return, throw, continue, or break statement
@@ -19,12 +20,14 @@ These are rules designed to prevent you from making mistakes. They either prescr
 * [no-caller] - disallow use of `arguments.caller` or `arguments.callee` are used
 * [curly] - require curly brace for all control statements
 * [eqeqeq] - require the use of `===` and `!==`
+* [dot-notation] - encourages use of dot notation whenever possible
 * [no-eval] - disallow use of `eval()`
 * [no-with] - disallow use of the `with` statement
 * [no-undef-init] - disallow use of undefined when initializing variables
 * [no-floating-decimal] - disallow the use of leading or trailing decimal points in numeric literals
 * [no-octal] - disallow use of octal literals
 * [no-new] - disallow use of new operator when not part of the assignment or comparison
+* [no-new-func] - disallow use of new operator for `Function` object
 
 ## Stylistic Issues
 
