@@ -1,6 +1,6 @@
 /**
- * @fileoverview Tests for no-floating-decimal rule.
- * @author James Allardice
+ * @fileoverview Tests for quotes rule.
+ * @author Matt DuVall <http://www.mattduvall.com/>
  */
 
 //------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ var vows = require("vows"),
 // Constants
 //------------------------------------------------------------------------------
 
-var RULE_ID = "no-floating-decimal";
+var RULE_ID = "quotes";
 
 //------------------------------------------------------------------------------
 // Tests
@@ -23,64 +23,14 @@ var RULE_ID = "no-floating-decimal";
 
 vows.describe(RULE_ID).addBatch({
 
-    "when evaluating 'var x = .5;'": {
+    "when evaluating `var foo = 'bar';` with single-quotes on": {
 
-        topic: "var x = .5;",
-
-        "should report a violation": function(topic) {
-            var config = { rules: {} };
-            config.rules[RULE_ID] = 1;
-
-            var messages = eslint.verify(topic, config);
-
-            assert.equal(messages.length, 1);
-            assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "A leading decimal point can be confused with a dot.");
-            assert.include(messages[0].node.type, "Literal");
-        }
-    },
-
-    "when evaluating 'var x = -.5;'": {
-
-        topic: "var x = -.5;",
-
-        "should report a violation": function(topic) {
-            var config = { rules: {} };
-            config.rules[RULE_ID] = 1;
-
-            var messages = eslint.verify(topic, config);
-
-            assert.equal(messages.length, 1);
-            assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "A leading decimal point can be confused with a dot.");
-            assert.include(messages[0].node.type, "Literal");
-        }
-    },
-
-    "when evaluating 'var x = 2.;'": {
-
-        topic: "var x = 2.;",
-
-        "should report a violation": function(topic) {
-            var config = { rules: {} };
-            config.rules[RULE_ID] = 1;
-
-            var messages = eslint.verify(topic, config);
-
-            assert.equal(messages.length, 1);
-            assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "A trailing decimal point can be confused with a dot.");
-            assert.include(messages[0].node.type, "Literal");
-        }
-    },
-
-    "when evaluating 'var x = 2.5;'": {
-
-        topic: "var x = 2.5;",
+        topic: "var foo = 'bar';",
 
         "should not report a violation": function(topic) {
+
             var config = { rules: {} };
-            config.rules[RULE_ID] = 1;
+            config.rules[RULE_ID] = [1, "single"];
 
             var messages = eslint.verify(topic, config);
 
@@ -88,13 +38,63 @@ vows.describe(RULE_ID).addBatch({
         }
     },
 
-    "when evaluating 'var x = \"2.5\";'": {
+    "when evaluating `var foo = \"bar\";` with single-quotes on": {
 
-        topic: "var x = \"2.5\";",
+        topic: "var foo = \"bar\";",
+
+        "should report a violation": function(topic) {
+
+            var config = { rules: {} };
+            config.rules[RULE_ID] = [1, "single"];
+
+            var messages = eslint.verify(topic, config);
+
+            assert.equal(messages.length, 1);
+            assert.equal(messages[0].ruleId, RULE_ID);
+            assert.equal(messages[0].message, "Use single quotes for string literals.");
+        }
+    },
+
+    "when evaluating `var foo = 'bar';` with double-quotes on": {
+
+        topic: "var foo = 'bar';",
 
         "should not report a violation": function(topic) {
+
             var config = { rules: {} };
-            config.rules[RULE_ID] = 1;
+            config.rules[RULE_ID] = [1, "double"];
+
+            var messages = eslint.verify(topic, config);
+
+            assert.equal(messages.length, 1);
+            assert.equal(messages[0].ruleId, RULE_ID);
+            assert.equal(messages[0].message, "Use double quotes for string literals.");
+        }
+    },
+
+    "when evaluating `var foo = \"bar\";` with double-quotes on": {
+
+        topic: "var foo = \"bar\";",
+
+        "should report a violation": function(topic) {
+
+            var config = { rules: {} };
+            config.rules[RULE_ID] = [1, "double"];
+
+            var messages = eslint.verify(topic, config);
+
+            assert.equal(messages.length, 0);
+        }
+    },
+
+    "when evaluating `var foo = 1;` with a non-string literal": {
+
+        topic: "var foo = 1;",
+
+        "should not report a violation": function(topic) {
+
+            var config = { rules: {} };
+            config.rules[RULE_ID] = [1, "single"];
 
             var messages = eslint.verify(topic, config);
 

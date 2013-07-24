@@ -1,6 +1,6 @@
 /**
- * @fileoverview Tests for no-floating-decimal rule.
- * @author James Allardice
+ * @fileoverview Tests for no-native-reassign rule.
+ * @author Ilya Volodin
  */
 
 //------------------------------------------------------------------------------
@@ -15,19 +15,18 @@ var vows = require("vows"),
 // Constants
 //------------------------------------------------------------------------------
 
-var RULE_ID = "no-floating-decimal";
+var RULE_ID = "no-native-reassign";
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
 vows.describe(RULE_ID).addBatch({
-
-    "when evaluating 'var x = .5;'": {
-
-        topic: "var x = .5;",
+    "when evaluating \"String = 'hello world'\"": {
+        topic: "String = 'hello world';",
 
         "should report a violation": function(topic) {
+
             var config = { rules: {} };
             config.rules[RULE_ID] = 1;
 
@@ -35,50 +34,17 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "A leading decimal point can be confused with a dot.");
-            assert.include(messages[0].node.type, "Literal");
+            assert.equal(messages[0].message, "String is a read-only native object.");
+            assert.include(messages[0].node.type, "AssignmentExpression");
         }
     },
 
-    "when evaluating 'var x = -.5;'": {
+    "when evaluating \"string = 'hello world'\"": {
 
-        topic: "var x = -.5;",
-
-        "should report a violation": function(topic) {
-            var config = { rules: {} };
-            config.rules[RULE_ID] = 1;
-
-            var messages = eslint.verify(topic, config);
-
-            assert.equal(messages.length, 1);
-            assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "A leading decimal point can be confused with a dot.");
-            assert.include(messages[0].node.type, "Literal");
-        }
-    },
-
-    "when evaluating 'var x = 2.;'": {
-
-        topic: "var x = 2.;",
-
-        "should report a violation": function(topic) {
-            var config = { rules: {} };
-            config.rules[RULE_ID] = 1;
-
-            var messages = eslint.verify(topic, config);
-
-            assert.equal(messages.length, 1);
-            assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "A trailing decimal point can be confused with a dot.");
-            assert.include(messages[0].node.type, "Literal");
-        }
-    },
-
-    "when evaluating 'var x = 2.5;'": {
-
-        topic: "var x = 2.5;",
+        topic: "string = 'hello world';",
 
         "should not report a violation": function(topic) {
+
             var config = { rules: {} };
             config.rules[RULE_ID] = 1;
 
@@ -88,11 +54,29 @@ vows.describe(RULE_ID).addBatch({
         }
     },
 
-    "when evaluating 'var x = \"2.5\";'": {
+    "when evaluating 'var String'": {
+        topic: "var String;",
 
-        topic: "var x = \"2.5\";",
+        "should report a violation": function(topic) {
+
+            var config = { rules: {} };
+            config.rules[RULE_ID] = 1;
+
+            var messages = eslint.verify(topic, config);
+
+            assert.equal(messages.length, 1);
+            assert.equal(messages[0].ruleId, RULE_ID);
+            assert.equal(messages[0].message, "Redefinition of 'String'");
+            assert.include(messages[0].node.type, "VariableDeclarator");
+        }
+    },
+
+    "when evaluating 'var string'": {
+
+        topic: "var string;",
 
         "should not report a violation": function(topic) {
+
             var config = { rules: {} };
             config.rules[RULE_ID] = 1;
 
@@ -101,6 +85,4 @@ vows.describe(RULE_ID).addBatch({
             assert.equal(messages.length, 0);
         }
     }
-
-
 }).export(module);
