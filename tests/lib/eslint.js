@@ -228,14 +228,20 @@ vows.describe("eslint").addBatch({
 
         "should retrieve the global scope correctly from a Program": function(topic) {
             var config = { rules: {} };
-
             eslint.reset();
+            var getScopeThrew = false;
             eslint.on("Program", function(node) {
-                var scope = eslint.getScope();
+                var scope;
+                try {
+                    scope = eslint.getScope();
+                } catch (ex) {
+                    getScopeThrew = true;
+                }
                 assert.equal(scope.type, "global");
             });
 
             eslint.verify(topic, config, true);
+            assert.equal(getScopeThrew, false, "Expected getScope() to not throw");
         },
 
         "should retrieve the global scope correctly from a FunctionDeclaration": function(topic) {
