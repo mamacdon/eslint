@@ -22,16 +22,106 @@ vows.describe("cli").addBatch({
         topic: "conf/eslint.json",
 
         "should load the specified config file": function(topic) {
-            var _log = console.log;
+            var log = console.log;
 
             // Assign console.log to noop to skip CLI output
             console.log = function() {};
 
             assert.doesNotThrow(function () {
-              cli.execute(["-c", topic, "lib/cli.js"]);
+                cli.execute(["-c", topic, "lib/cli.js"]);
             });
 
-            console.log = _log;
+            console.log = log;
+        }
+
+    },
+
+    "when given a valid built-in formatter name": {
+
+        topic: "checkstyle",
+
+        "should execute without any errors": function(topic) {
+            var log = console.log;
+
+            // Assign console.log to noop to skip CLI output
+            console.log = function() {};
+
+            var exit = cli.execute(["-f", topic, "tests/fixtures/passing.js"]);
+            assert.equal(exit, 0);
+
+            console.log = log;
+        }
+
+    },
+
+    "when given an invalid built-in formatter name": {
+
+        topic: "fakeformatter",
+
+        "should execute with error": function(topic) {
+            var log = console.log;
+
+            // Assign console.log to noop to skip CLI output
+            console.log = function() {};
+
+            var exit = cli.execute(["-f", topic, "tests/fixtures/passing.js"]);
+            assert.equal(exit, 1);
+
+            console.log = log;
+        }
+
+    },
+
+    "when given a valid formatter path": {
+
+        topic: "tests/fixtures/formatters/simple.js",
+
+        "should execute without any errors": function(topic) {
+            var log = console.log;
+
+            // Assign console.log to noop to skip CLI output
+            console.log = function() {};
+
+            var exit = cli.execute(["-f", topic, "tests/fixtures/passing.js"]);
+            assert.equal(exit, 0);
+
+            console.log = log;
+        }
+
+    },
+
+    "when given an invalid formatter path": {
+
+        topic: "tests/fixtures/formatters/file-does-not-exist.js",
+
+        "should execute with error": function(topic) {
+            var log = console.log;
+
+            // Assign console.log to noop to skip CLI output
+            console.log = function() {};
+
+            var exit = cli.execute(["-f", topic, "tests/fixtures/passing.js"]);
+            assert.equal(exit, 1);
+
+            console.log = log;
+        }
+
+    },
+
+    "when executing a file with an error": {
+
+        topic: "tests/fixtures/configurations/semi-error.js",
+
+        "should execute with error": function(topic) {
+            var log = console.log;
+
+            // Assign console.log to noop to skip CLI output
+            console.log = function() {};
+
+            var exit = cli.execute([topic]);
+            assert.equal(exit, 1);
+
+            console.log = log;
         }
 
     },
@@ -42,7 +132,7 @@ vows.describe("cli").addBatch({
 
         "should not print the results from previous execution": function(topic) {
             var results = '',
-                _log = console.log;
+                log = console.log;
 
             // Collect the CLI output.
             console.log = function(msg) {
@@ -58,7 +148,7 @@ vows.describe("cli").addBatch({
             cli.execute([topic[1]]);
             assert.equal(results, "\n0 problems");
 
-            console.log = _log;
+            console.log = log;
         }
 
     }

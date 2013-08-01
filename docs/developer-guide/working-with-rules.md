@@ -14,6 +14,8 @@ Each ESLint rule has two files: a source file in the `lib/rules` directory and a
 
 module.exports = function(context) {
 
+    "use strict";
+
     return {
         // properties go here
     };
@@ -27,6 +29,8 @@ Each rule is represented by a single object with several properties. The propert
 
 ```js
 module.exports = function(context) {
+
+    "use strict";
 
     return {
 
@@ -156,3 +160,13 @@ The rule naming conventions for ESLint are fairly simple:
 * If your rule is enforcing the inclusion of something, use a short name without a special prefix.
 * Keep your rule names as short as possible, use abbreviations where appropriate, and no more than four words.
 * Use dashes between words.
+
+## Rule Acceptance Criteria
+
+Because rules are highly personal (and therefore very contentious), the following guidelines determine whether or not a rule is accepted and whether or not it is on by default:
+
+* If the same rule exists in JSHint and is turned on by default, it must have the same message and be enabled by default.
+* If the same rule exists in JSLint but not in JSHint, it must have the same message and be disabled by default.
+* If the rule doesn't exist in JSHint or JSLint, then it must:
+  * Not be library-specific.
+  * Demonstrate a possible issue that can be resolved by rewriting the code.
