@@ -35,7 +35,7 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "test function has too many parameters");
+            assert.equal(messages[0].message, "This function has too many parameters (3). Maximum allowed is 2.");
             assert.include(messages[0].node.type, "FunctionDeclaration");
         }
     },
@@ -52,8 +52,22 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "test function has too many parameters");
+            assert.equal(messages[0].message, "This function has too many parameters (4). Maximum allowed is 3.");
             assert.include(messages[0].node.type, "FunctionDeclaration");
+        }
+    },
+
+    "when evaluating 'function test(d, e, f) {}'": {
+
+        topic: "function test(d, e, f) {}",
+
+        "should not report a violation": function(topic) {
+            var config = { rules: {} };
+            config.rules[RULE_ID] = 1;
+
+            var messages = eslint.verify(topic, config);
+
+            assert.equal(messages.length, 0);
         }
     },
 
@@ -69,7 +83,7 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "Anonymous function has too many parameters");
+            assert.equal(messages[0].message, "This function has too many parameters (4). Maximum allowed is 3.");
             assert.include(messages[0].node.type, "FunctionExpression");
         }
     },
@@ -86,7 +100,7 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "Anonymous function has too many parameters");
+            assert.equal(messages[0].message, "This function has too many parameters (4). Maximum allowed is 3.");
             assert.include(messages[0].node.type, "FunctionExpression");
         }
     },
@@ -131,7 +145,7 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "test function has too many parameters");
+            assert.equal(messages[0].message, "This function has too many parameters (3). Maximum allowed is 1.");
             assert.include(messages[0].node.type, "FunctionExpression");
         }
     }

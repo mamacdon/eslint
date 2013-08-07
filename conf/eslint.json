@@ -5,8 +5,9 @@
         "no-caller": 1,
         "no-bitwise": 0,
         "no-console": 1,
-        "no-dangle": 1,
+        "no-comma-dangle": 1,
         "no-debugger": 1,
+        "no-dupe-keys": 1,
         "no-empty": 1,
         "no-eq-null": 0,
         "no-eval": 1,
@@ -33,8 +34,10 @@
         "no-ternary": 0,
         "no-self-compare": 0,
         "no-sync": 0,
+        "no-underscore-dangle": 1,
         "no-loop-func": 1,
         "no-empty-label": 1,
+        "no-unused-vars": 1,
 
         "smarter-eqeqeq": 0,
         "brace-style": 0,
@@ -46,6 +49,7 @@
         "guard-for-in": 0,
         "radix": 0,
         "new-cap": 1,
+        "one-var": 0,
         "quote-props": 0,
         "semi": 1,
         "use-isnan": 1,
@@ -56,6 +60,7 @@
         "complexity": [0, 11],
         "wrap-iife": 0,
         "no-multi-str": 1,
-        "consistent-this": [0, "that"]
+        "consistent-this": [0, "that"],
+        "unnecessary-strict": 1
     }
 }

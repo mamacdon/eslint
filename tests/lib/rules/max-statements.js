@@ -36,7 +36,7 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "Function contains 3 statements, maximum allowed is 2.");
+            assert.equal(messages[0].message, "This function has too many statements (3). Maximum allowed is 2.");
         }
     },
 
@@ -53,7 +53,7 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "Function contains 3 statements, maximum allowed is 2.");
+            assert.equal(messages[0].message, "This function has too many statements (3). Maximum allowed is 2.");
         }
     },
 
@@ -100,7 +100,7 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "Function contains 5 statements, maximum allowed is 4.");
+            assert.equal(messages[0].message, "This function has too many statements (5). Maximum allowed is 4.");
         }
     },
 
@@ -117,7 +117,7 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "Function contains 5 statements, maximum allowed is 4.");
+            assert.equal(messages[0].message, "This function has too many statements (5). Maximum allowed is 4.");
         }
     },
 
@@ -125,7 +125,7 @@ vows.describe(RULE_ID).addBatch({
 
         topic: "function foo() { var bar = 1; if (true) { for (;;) { var qux = null; } } else { quxx(); } return 3; }",
 
-        "should report a violation": function(topic) {
+        "should not report a violation": function(topic) {
 
             var config = { rules: {} };
             config.rules[RULE_ID] = [1, 6];
@@ -149,12 +149,12 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "Function contains 6 statements, maximum allowed is 5.");
+            assert.equal(messages[0].message, "This function has too many statements (6). Maximum allowed is 5.");
         }
     },
 
     "when evaluating with function calls and nested function and max-statements set to 3": {
-        
+
         topic: "function foo() { var x = 5; function bar() { var y = 6; } bar(); z = 10; baz(); }",
 
         "should report a violation": function(topic) {
@@ -165,12 +165,12 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "Function contains 5 statements, maximum allowed is 3.");
+            assert.equal(messages[0].message, "This function has too many statements (5). Maximum allowed is 3.");
         }
     },
 
     "when evaluating with function calls and nested function and max-statements set to 4": {
-        
+
         topic: "function foo() { var x = 5; function bar() { var y = 6; } bar(); z = 10; baz(); }",
 
         "should report a violation": function(topic) {
@@ -181,15 +181,15 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 1);
             assert.equal(messages[0].ruleId, RULE_ID);
-            assert.equal(messages[0].message, "Function contains 5 statements, maximum allowed is 4.");
+            assert.equal(messages[0].message, "This function has too many statements (5). Maximum allowed is 4.");
         }
     },
 
     "when evaluating with function calls and nested function and max-statements set to 5": {
-        
+
         topic: "function foo() { var x = 5; function bar() { var y = 6; } bar(); z = 10; baz(); }",
 
-        "should report a violation": function(topic) {
+        "should not report a violation": function(topic) {
             var config = { rules: {} };
             config.rules[RULE_ID] = [1, 5];
 
@@ -197,8 +197,21 @@ vows.describe(RULE_ID).addBatch({
 
             assert.equal(messages.length, 0);
         }
-    }
+    },
 
+    "when evaluating a function with max-statements on, but no max option passed": {
+
+        topic: "function foo() { var a; var b; var c; var x; var y; var z; bar(); baz(); qux(); quxx(); }",
+
+        "should not report a violation": function(topic) {
+            var config = { rules: {} };
+            config.rules[RULE_ID] = 1;
+
+            var messages = eslint.verify(topic, config);
+
+            assert.equal(messages.length, 0);
+        }
+    }
 
 }).export(module);
 
