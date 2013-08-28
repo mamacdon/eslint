@@ -36,6 +36,24 @@ vows.describe("cli").addBatch({
 
     },
 
+    "when given a config with rules with options and severity level set to error": {
+        topic: ["--config", "tests/fixtures/configurations/quotes-error.json", "single-quoted.js"],
+
+        "should exit with an error status (1)": function(topic) {
+            var log = console.log,
+                exitStatus;
+
+            // Assign console.log to noop to skip CLI output
+            console.log = function() {};
+
+            assert.doesNotThrow(function () {
+                exitStatus = cli.execute(topic);
+            });
+            console.log = log;
+
+            assert.equal(exitStatus, 1);
+        },
+    },
 
     "when given a config file and a directory of files": {
 
@@ -56,6 +74,36 @@ vows.describe("cli").addBatch({
             assert.equal(exitStatus, 0);
         }
 
+    },
+
+    "when given a config with environment set to browser": {
+        topic: ["--config", "tests/fixtures/configurations/env-browser.json", "tests/fixtures/globals-browser.js"],
+
+        "should execute without any errors": function(topic) {
+            var log = console.log;
+
+            // Assign console.log to noop to skip CLI output
+            console.log = function() {};
+            var exit = cli.execute(topic);
+            assert.equal(exit, 0);
+
+            console.log = log;
+        }
+    },
+
+    "when given a config with environment set to browser": {
+        topic: ["--config", "tests/fixtures/configurations/env-node.json", "tests/fixtures/globals-node.js"],
+
+        "should execute without any errors": function(topic) {
+            var log = console.log;
+
+            // Assign console.log to noop to skip CLI output
+            console.log = function() {};
+            var exit = cli.execute(topic);
+            assert.equal(exit, 0);
+
+            console.log = log;
+        }
     },
 
     "when given a valid built-in formatter name": {
